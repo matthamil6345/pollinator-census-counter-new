@@ -1,0 +1,145 @@
+{{ block "index" . }}
+  <!doctype html>
+  <html lang="en">
+    <head>
+      <title></title>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <script src="https://unpkg.com/htmx.org@1.7.0/dist/htmx.js"></script>
+      <link rel="preconnect" href="https://fonts.gstatic.com" />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400&display=swap"
+        rel="stylesheet"
+      />
+      <style>
+        body {
+          font-family: "Josefin Sans", sans-serif;
+        }
+        .button-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+          padding: 10px;
+        }
+        .button-grid button {
+          padding: 10px;
+          background-color: #68c8c7;
+          color: white;
+          font-weight: bold;
+          border: none;
+          cursor: pointer;
+          border-radius: 10px;
+        }
+        .button-submit {
+          font-family: "Josefin Sans", sans-serif;
+          padding: 10px;
+          background-color: #e15928;
+          color: white;
+          font-weight: bold;
+          border: none;
+          cursor: pointer;
+          border-radius: 10px;
+          display: block;
+          margin: 0 auto;
+        }
+        .button-grid button:hover {
+          background-color: #35332d;
+        }
+        body {
+          background-color: #decfb5;
+        }
+        .timer {
+          text-align: center;
+          color: #36332d;
+          font-size: 2em;
+          font-weight: bold;
+          font-family: "Josefin Sans";
+          padding: 20px;
+          border-radius: 10px;
+        }
+        img {
+          display: block;
+          margin: 0 auto;
+          width: 100px;
+          padding: 10px;
+        }
+        .pollinator {
+          font-family: "Josefin Sans", sans-serif;
+        }
+      </style>
+    </head>
+    <body>
+      <a href="https://www.foodwellalliance.org/">
+        <img src="/images/fwa.png" />
+      </a>
+      {{ if .User }}
+        {{ template "button-grid" . }}
+      {{ else }}
+        <form hx-swap="outerHTML" hx-get="/begin" hx-push-url="true">
+          <input type="text" placeholder="Jon Doe" name="name" />
+          <input type="email" placeholder="jondoe@email.com" name="email" />
+          <input type="phone" placeholder="(123)-456-7890" name="phone" />
+          <button type="submit">Add</button>
+        </form>
+      {{ end }}
+    </body>
+  </html>
+{{ end }}
+{{ block "button-grid" . }}
+  <form hx-post="finish" hx-target="outerHTML">
+    <input type="text" name="name" value="{{ .User.Name }}" hidden />
+    <input type="email" name="email" value="{{ .User.Email }}" hidden />
+    <input type="phone" name="phone" value="{{ .User.Phone }}" hidden />
+    <div id="timer" class="timer">{{ .Time }}</div>
+    <div class="button-grid">
+      {{ range .Pollinators }}
+        <button
+          id="{{ .ID }}"
+          title="{{ .Description }}"
+          class="pollinator"
+          type="button"
+        >
+          {{ .Name }} (0)
+        </button>
+        <input
+          type="number"
+          id="ct-{{ .ID }}"
+          name="ct-{{ .ID }}"
+          value="0"
+          readonly
+          style="border: none; width: 40px;"
+          hidden
+        />
+      {{ end }}
+    </div>
+    <button type="submit" class="button-submit">Finish</button>
+  </form>
+  <script>
+    window.timer = document.querySelector(".timer");
+    window.time = "{{ .Time }}" ?? 0;
+    window.timer.textContent = `Time Remaining: ${new Date(time * 1000).toISOString().substr(14, 5)}`;
+    window.intervalId;
+    if(window.intervalId){
+      clearInterval(intervalId);
+    }
+    window.intervalId = setInterval(() => {
+      time--;
+      window.timer.textContent = `Time Remaining: ${new Date(time * 1000).toISOString().substr(14, 5)}`;
+      if (time <= 60){
+        window.timer.style.backgroundColor = "#e15928"; //set background color to fwa orange
+      } else {
+        window.timer.style.backgroundColor = "#68c8c7"; //set background color to fwa brown
+      }
+      if (time === 0) {
+        clearInterval(intervalId);
+      }
+    }, 1000);
+    document.addEventListener("click", (e) => {
+      if (e.target.classList.contains("pollinator")) {
+        const input = document.getElementById(`ct-${e.target.id}`);
+        input.value = parseInt(input.value) + 1;
+        e.target.textContent = e.target.textContent.replace(/\d+/, input.value);
+      }
+    });
+  </script>
+{{ end }}

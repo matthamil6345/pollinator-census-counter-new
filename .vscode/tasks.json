@@ -1,0 +1,12 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Air",
+      "type": "shell",
+      "command": "/Users/matthamil/go/bin/air",
+      "problemMatcher": [],
+      "isBackground": true
+    }
+  ]
+}
