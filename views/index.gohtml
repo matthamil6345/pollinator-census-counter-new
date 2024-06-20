@@ -16,6 +16,12 @@
           font-family: "Josefin Sans", sans-serif;
           background-color: #decfb5;
         }
+        h1 {
+          text-align: center;
+          color: #36332d;
+          font-size: 2em;
+          font-weight: bold;
+        }
         .button-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
@@ -24,14 +30,14 @@
         }
         .button-grid button {
           font-family: "Josefin Sans", sans-serif;
-          padding: 20px;
+          padding: 15px;
           background-color: #68c8c7;
           color: white;
           font-weight: bold;
           border: none;
           cursor: pointer;
           border-radius: 10px;
-          font-size: 1em;
+          font-size: 1.5em;
         }
         .button-submit {
           font-family: "Josefin Sans", sans-serif;
@@ -44,7 +50,7 @@
           border-radius: 10px;
           display: block;
           margin: 0 auto;
-          font-size: 1em;
+          font-size: 1.5em;
         }
         button:hover {
           background-color: #35332d;
@@ -73,9 +79,8 @@
       </style>
     </head>
     <body>
-      <a href="https://www.foodwellalliance.org/">
-        <img src="/images/fwa.png" />
-      </a>
+      <img src="/images/fwa.png" />
+      <h1>Pollinator Census Counter</h1>
       {{ if .User }}
         {{ template "button-grid" . }}
       {{ else }}
@@ -89,8 +94,14 @@
     </body>
     <footer>
       <a href="https://www.foodwellalliance.org/">Food Well Alliance</a>
-      &copy; 2024
+      &copy; currentYear
     </footer>
+    <script>
+      //ensure copy date is of current year
+      document.querySelector("footer").innerHTML = document
+        .querySelector("footer")
+        .innerHTML.replace("currentYear", new Date().getFullYear());
+    </script>
   </html>
 {{ end }}
 {{ block "button-grid" . }}
@@ -125,14 +136,14 @@
   <script>
     window.timer = document.querySelector(".timer");
     window.time = "{{ .Time }}" ?? 0;
-    window.timer.textContent = `Time Remaining: ${new Date(time * 1000).toISOString().substr(14, 5)}`;
+    window.timer.textContent = new Date(time * 1000).toISOString().substr(14, 5);
     window.intervalId;
     if(window.intervalId){
       clearInterval(intervalId);
     }
     window.intervalId = setInterval(() => {
       time--;
-      window.timer.textContent = `Time Remaining: ${new Date(time * 1000).toISOString().substr(14, 5)}`;
+      window.timer.textContent = new Date(time * 1000).toISOString().substr(14, 5);
       if (time <= 60){
         //window.timer.style.backgroundColor = "#e15928"; //set background color to fwa orange
       } else {
