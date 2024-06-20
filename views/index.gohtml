@@ -2,7 +2,7 @@
   <!doctype html>
   <html lang="en">
     <head>
-      <title></title>
+      <title>Pollinator Census Counter</title>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <script src="https://unpkg.com/htmx.org@1.7.0/dist/htmx.js"></script>
@@ -14,6 +14,7 @@
       <style>
         body {
           font-family: "Josefin Sans", sans-serif;
+          background-color: #decfb5;
         }
         .button-grid {
           display: grid;
@@ -22,39 +23,38 @@
           padding: 10px;
         }
         .button-grid button {
-          padding: 10px;
+          font-family: "Josefin Sans", sans-serif;
+          padding: 20px;
           background-color: #68c8c7;
           color: white;
           font-weight: bold;
           border: none;
           cursor: pointer;
           border-radius: 10px;
+          font-size: 1em;
         }
         .button-submit {
           font-family: "Josefin Sans", sans-serif;
-          padding: 10px;
+          padding: 20px;
+          width: 50%;
           background-color: #e15928;
           color: white;
-          font-weight: bold;
           border: none;
           cursor: pointer;
           border-radius: 10px;
           display: block;
           margin: 0 auto;
+          font-size: 1em;
         }
-        .button-grid button:hover {
+        button:hover {
           background-color: #35332d;
-        }
-        body {
-          background-color: #decfb5;
         }
         .timer {
           text-align: center;
           color: #36332d;
           font-size: 2em;
           font-weight: bold;
-          font-family: "Josefin Sans";
-          padding: 20px;
+          padding: 10px;
           border-radius: 10px;
         }
         img {
@@ -63,8 +63,12 @@
           width: 100px;
           padding: 10px;
         }
-        .pollinator {
-          font-family: "Josefin Sans", sans-serif;
+        footer {
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+          text-align: center;
+          padding: 10px;
         }
       </style>
     </head>
@@ -83,6 +87,10 @@
         </form>
       {{ end }}
     </body>
+    <footer>
+      <a href="https://www.foodwellalliance.org/">Food Well Alliance</a>
+      &copy; 2024
+    </footer>
   </html>
 {{ end }}
 {{ block "button-grid" . }}
@@ -126,7 +134,7 @@
       time--;
       window.timer.textContent = `Time Remaining: ${new Date(time * 1000).toISOString().substr(14, 5)}`;
       if (time <= 60){
-        window.timer.style.backgroundColor = "#e15928"; //set background color to fwa orange
+        //window.timer.style.backgroundColor = "#e15928"; //set background color to fwa orange
       } else {
         window.timer.style.backgroundColor = "#68c8c7"; //set background color to fwa brown
       }
